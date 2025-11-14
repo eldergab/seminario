@@ -3,117 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumo Histórico de Doutrina e Convênios (D&C)</title>
+    <title>Jogo da Memória: Doutrina e Convênios</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f4f8;
             color: #333;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
         h1 {
-            color: #0056b3;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-        h2 {
-            color: #007bff;
-            margin-top: 25px;
-        }
-        .section-box {
-            border: 1px solid #ddd;
-            padding: 15px;
+            color: #004a99;
             margin-bottom: 20px;
-            border-radius: 5px;
-            background-color: #e9f5ff;
         }
-        .citation {
-            margin-top: 10px;
-            padding: 10px;
-            border-left: 5px solid #0056b3;
-            background-color: #f8f8f8;
-            font-style: italic;
-            color: #555;
+        .board {
+            display: grid;
+            /* 10 colunas para 50 cards (25 pares * 2) */
+            grid-template-columns: repeat(10, 1fr); 
+            gap: 10px;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        .citation strong {
-            display: block;
-            margin-top: 5px;
-            text-align: right;
+        .card {
+            background-color: #007bff;
+            color: white;
+            height: 100px; /* Altura padrão para todos os cards */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+            text-align: center;
+            padding: 5px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            position: relative;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+            pointer-events: none; /* Desabilita clique enquanto estiver virado ou em transição */
+        }
+        .card.matched {
+            background-color: #28a745; /* Verde para pares encontrados */
+            color: white;
+            pointer-events: none;
+            cursor: default;
+        }
+        .card-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            backface-visibility: hidden;
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .card-front {
+            background-color: #007bff; /* Azul: a ser clicado */
+        }
+        .card-back {
+            background-color: #e9ecef; /* Cinza claro: conteúdo visível */
+            color: #333;
+            transform: rotateY(180deg);
+        }
+        .card.flipped .card-front {
+            transform: rotateY(180deg);
+        }
+        .card.flipped .card-back {
+            transform: rotateY(0deg);
+        }
+        .card-back p {
+            margin: 0;
+            line-height: 1.2;
             font-weight: bold;
-            font-style: normal;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #dc3545;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e0a800;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>📜 Resumo de Seções Históricas Chave em Doutrina e Convênios</h1>
+    <h1>Jogo da Memória: 25 Escrituras Chave de Doutrina e Convênios</h1>
 
-    <div class="section-box">
-        <h2>Seção 1: O Prefácio do Senhor</h2>
-        <p>A revelação dada em 1831 estabelece o propósito do livro: é a <strong>voz de Jesus Cristo</strong>, advertindo a humanidade, testificando da Restauração e chamando as pessoas ao arrependimento e a aceitar o evangelho e Sua Igreja.</p>
-        <div class="citation">
-            <p>"O Senhor disse: 'Seja pela minha própria voz ou pela voz de meus servos, é o mesmo' (D&C 1:38).”</p>
-            <strong>— Élder Neal A. Maxwell, Quórum dos Doze Apóstolos</strong>
+    <div class="board" id="game-board">
         </div>
-    </div>
 
-    <div class="section-box">
-        <h2>Seção 13: A Restauração do Sacerdócio Aarônico</h2>
-        <p>A revelação de um único versículo (1829), conferida por <strong>João Batista</strong> a Joseph Smith e Oliver Cowdery, que lhes deu a autoridade de <strong>batizar para a remissão de pecados</strong> e as chaves para o <strong>ministério de anjos</strong>.</p>
-        <div class="citation">
-            <p>“O Sacerdócio Aarônico tem as chaves do ‘evangelho do arrependimento e do batismo e da remissão de pecados’ (D&C 84:27). Para nós o poder purificador da Expiação do Salvador renova-se ao tomarmos o sacramento. A promessa de termos ‘sempre [conosco] o Seu Espírito’ (D&C 20:77) é essencial para nossa espiritualidade.”</p>
-            <strong>— Presidente Dallin H. Oaks, Primeira Presidência</strong>
-        </div>
-    </div>
+    <p id="message"></p>
 
-    <div class="section-box">
-        <h2>Seção 76: A Visão</h2>
-        <p>Recebida por Joseph Smith e Sidney Rigdon em 1832. É uma revelação profunda sobre a vida após a morte, descrevendo os <strong>três graus de glória</strong> (celestial, terrestre e telestial) e o princípio de que Deus salvará a todos, exceto aos filhos de perdição. Ela expandiu drasticamente a compreensão da salvação.</p>
-        <div class="citation">
-            <p>“E agora, depois dos muitos testemunhos que se prestaram dele, este é o testemunho, último de todos, que nós damos dele: Que ele vive! Porque o vimos, sim, à direita de Deus; e ouvimos a voz testificando que ele é o Unigênito do Pai.” (D&C 76:22–23)</p>
-            <strong>— Joseph Smith e Sidney Rigdon, citando o testemunho contido na seção</strong>
-        </div>
-    </div>
+    <button onclick="startGame()">Reiniciar Jogo</button>
 
-    <div class="section-box">
-        <h2>Seção 89: A Palavra de Sabedoria</h2>
-        <p>Uma lei de saúde dada em 1833, que aconselha o uso de ervas e frutas e restringe o uso de vinho, bebidas fortes, tabaco e bebidas quentes (chá e café). É um mandamento com promessas de <strong>saúde, conhecimento e proteção</strong>.</p>
-        <div class="citation">
-            <p>“O cumprimento dos mandamentos divinos proporciona bênçãos, todas as vezes! A violação dos mandamentos divinos faz com que percamos as bênçãos, todas as vezes!”</p>
-            <strong>— Presidente Russell M. Nelson, Primeira Presidência</strong>
-        </div>
-    </div>
-
-    <div class="section-box">
-        <h2>Seção 110: As Chaves do Sacerdócio Restauradas</h2>
-        <p>Uma visão recebida no <strong>Templo de Kirtland</strong> (1836) após a dedicação. <strong>Jesus Cristo</strong> apareceu, seguido por <strong>Moisés</strong> (restaurando as chaves para a coligação de Israel), <strong>Elias</strong> (restaurando as chaves da dispensação de Abraão) e <strong>Elias, o Profeta</strong> (restaurando as <strong>chaves do poder selador</strong>, essenciais para o trabalho do templo).</p>
-        <div class="citation">
-            <p>“Sem as chaves do sacerdócio, nenhum de nós teria acesso às ordenanças e aos convênios essenciais que nos unem a nossos entes queridos eternamente e permitem que um dia voltemos a viver com Deus.”</p>
-            <strong>— Presidente Russell M. Nelson, Primeira Presidência</strong>
-        </div>
-    </div>
-
-    <div class="section-box">
-        <h2>Seções 121–123: Revelações da Cadeia de Liberty</h2>
-        <p>Cartas e revelações escritas por Joseph Smith enquanto ele era prisioneiro (1839). Contêm a súplica do Profeta a Deus ("Ó Deus, onde estás?") e a resposta do Senhor sobre como o poder do sacerdócio deve ser exercido e o consolo de que <strong>"tua adversidade e tuas aflições não durarão mais que um momento"</strong> (D&C 121:7).</p>
-        <div class="citation">
-            <p>“Naquele calabouço sombrio e naquele momento deprimente, veio a voz de Deus, dizendo: Meu filho, paz seja com tua alma; tua adversidade e tuas aflições não durarão mais que um momento; E então, se as suportares bem, Deus te exaltará no alto; triunfarás sobre todos os teus inimigos. [D&C 121:7–8]”</p>
-            <strong>— Élder Jeffrey R. Holland, Quórum dos Doze Apóstolos</strong>
-        </div>
-    </div>
-
-</div>
+    <script src="game.js"></script> 
 
 </body>
 </html>
